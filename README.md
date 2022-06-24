@@ -60,3 +60,5 @@ then go to `http://localhost/coordinates` and it should return
 JSON. If you want to check different address, then add params to url: http://localhost/coordinates?countryCode=lithuania&city=vilnius&street=gedimino+9&postcode=12345 . 
 
 And that's it, good luck!
+
+./vendor/bin/phpunit --colors --verbose --testdox
