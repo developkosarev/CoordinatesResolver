@@ -19,5 +19,5 @@ framework:
             #my.dedicated.cache: null
 
         pools:
-            my_cache_pool:
+            geocoder_cache_pool:
                 adapter: cache.adapter.filesystem
