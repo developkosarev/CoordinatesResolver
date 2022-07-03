@@ -4,45 +4,32 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use App\Repository\ResolvedAddressRepository;
 use App\ValueObject\Address;
 use App\ValueObject\Coordinates;
-use Symfony\Component\Cache\Adapter\AdapterInterface;
-use Symfony\Contracts\Cache\ItemInterface;
 
 class CacheGeocoder implements GeocoderInterface
 {
-    private AdapterInterface $cache;
+    private ResolvedAddressRepository $repository;
 
-    public function __construct(AdapterInterface $geocoderCachePool)
+    public function __construct(ResolvedAddressRepository $repository)
     {
-        $this->cache = $geocoderCachePool;
+        $this->repository = $repository;
     }
 
     public function geocode(Address $address): ?Coordinates
     {
-        $country = $address->getCountry();
-        $city = $address->getCity();
-        $street = $address->getStreet();
-        $postcode = $address->getPostcode();
+        $row = $this->repository->getByAddress($address);
 
-        $key = "country={$country};city={$city};street={$street};postalCode={$postcode}";
-
-        $item = $this->cache->getItem($key);
-        if (!$item->isHit()) {
+        if ($row === null) {
             return null;
         }
 
-        $result = $item->get();
-
-        return new Coordinates($result['lat'], $result['lng']);
+        return new Coordinates((float)$row->getLat(), (float)$row->getLng());
     }
 
-    //public function saveResolvedAddress(Address $address, ?Coordinates $coordinates): void
-    //{
-    //    $firstResult = $this->cache->get('my_cache_key', function (ItemInterface $item) {
-    //        $item->expiresAfter(3600);
-    //
-    //        return null;
-    //    });
-    //}
+    public function saveResolvedAddress(Address $address, ?Coordinates $coordinates): void
+    {
+
+    }
 }

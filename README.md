@@ -61,4 +61,7 @@ JSON. If you want to check different address, then add params to url: http://loc
 
 And that's it, good luck!
 
+```
+docker exec -it  nt_coordinates_resolver_php bash
 ./vendor/bin/phpunit --colors --verbose --testdox
+```

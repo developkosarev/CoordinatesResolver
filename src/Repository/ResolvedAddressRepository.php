@@ -15,7 +15,7 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method ResolvedAddress[]    findAll()
  * @method ResolvedAddress[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class ResolvedAddressRepository extends ServiceEntityRepository
+class ResolvedAddressRepository extends ServiceEntityRepository implements ResolvedAddressRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
     {
