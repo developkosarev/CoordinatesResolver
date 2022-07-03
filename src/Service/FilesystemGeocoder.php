@@ -8,7 +8,7 @@ use App\ValueObject\Address;
 use App\ValueObject\Coordinates;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
 
-class RedisGeocoder implements GeocoderInterface
+class FilesystemGeocoder implements GeocoderInterface
 {
     private const EXPIRES_AFTER = 60*60*24*365;
 

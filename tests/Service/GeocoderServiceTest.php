@@ -49,7 +49,7 @@ class GeocoderServiceTest extends KernelTestCase
         $this->assertEquals(1, $result->getLng());
     }
 
-    public function testGeocodeNull()
+    public function testGeocodeNoCache()
     {
         $address = new Address('lt', 'vilnius', 'jasinskio 16', '01112');
 

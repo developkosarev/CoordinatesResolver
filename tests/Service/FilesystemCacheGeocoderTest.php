@@ -2,20 +2,20 @@
 
 namespace App\Tests\Service;
 
-use App\Service\RedisGeocoder;
+use App\Service\FilesystemGeocoder;
 use App\ValueObject\Address;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Contracts\Cache\ItemInterface;
 
-class RedisGeocoderTest extends KernelTestCase
+class FilesystemCacheGeocoderTest extends KernelTestCase
 {
     public function testColdCacheGeocode()
     {
         $address = new Address('lt', 'vilnius', 'jasinskio 16', '01112');
 
         $cache = new ArrayAdapter();
-        $redisGeocoder = new RedisGeocoder($cache);
+        $redisGeocoder = new FilesystemGeocoder($cache);
         $coordinates = $redisGeocoder->geocode($address);
 
         $this->assertNull($coordinates);
@@ -34,7 +34,7 @@ class RedisGeocoderTest extends KernelTestCase
             return ['lat' => 1, 'lng' => 2];
         });
 
-        $redisGeocoder = new RedisGeocoder($cache);
+        $redisGeocoder = new FilesystemGeocoder($cache);
         $coordinates = $redisGeocoder->geocode($address);
 
         $this->assertEquals(1, $coordinates->getLat());

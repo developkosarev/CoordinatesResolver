@@ -4,12 +4,12 @@ namespace App\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class CoordinatesControllerTest extends WebTestCase
+class GeocoderControllerTest extends WebTestCase
 {
     public function testCoordinates()
     {
         $client = static::createClient();
-        $client->request('GET', '/coordinates');
+        $client->request('GET', '/geocoder');
 
         $this->assertResponseIsSuccessful();
     }
