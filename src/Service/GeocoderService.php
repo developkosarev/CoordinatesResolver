@@ -9,13 +9,11 @@ use App\ValueObject\Address;
 use App\ValueObject\Coordinates;
 use SplObjectStorage;
 
-class GeocoderService implements GeocoderInterface
+class GeocoderService implements GeocoderServiceInterface
 {
     private ResolvedAddressRepositoryInterface $repository;
 
     private bool $cacheEnabled = true;
-
-    private array $geocoderStack = [];
 
     private splObjectStorage $splObjectStorage;
 
@@ -33,8 +31,7 @@ class GeocoderService implements GeocoderInterface
 
     public function addGeocoder(GeocoderInterface $geocoder): self
     {
-        $this->geocoderStack[] = $geocoder;
-        $this->splObjectStorage->attach($geocoder, true);
+        $this->splObjectStorage->attach($geocoder);
 
         return $this;
     }
@@ -73,7 +70,6 @@ class GeocoderService implements GeocoderInterface
     {
         $this->splObjectStorage->rewind();
         while ($this->splObjectStorage->valid()) {
-            $enabled = $this->splObjectStorage->getInfo();
             $geocoder = $this->splObjectStorage->current();
 
             $coordinate = $geocoder->geocode($address);
@@ -86,5 +82,4 @@ class GeocoderService implements GeocoderInterface
 
         return null;
     }
-
 }

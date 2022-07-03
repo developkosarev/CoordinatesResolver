@@ -12,13 +12,10 @@ class HereMapsGeocoder implements GeocoderInterface
 {
     private const URL = 'https://geocode.search.hereapi.com/v1/geocode';
 
-    private string $apiKey;
-
     private ClientInterface $client;
 
-    public function __construct(string $hereMapsGeocodingApiKey, ClientInterface $client)
+    public function __construct(ClientInterface $client)
     {
-        $this->apiKey = $hereMapsGeocodingApiKey;
         $this->client = $client;
     }
 
@@ -29,14 +26,20 @@ class HereMapsGeocoder implements GeocoderInterface
         $city = $address->getCity();
         $postcode = $address->getPostcode();
 
+        $apiKey = $_ENV["HEREMAPS_GEOCODING_API_KEY"];
+
         $params = [
             'query' => [
                 'qq' => implode(';', ["country={$country}", "city={$city}", "street={$street}", "postalCode={$postcode}"]),
-                'apiKey' => $this->apiKey
+                'apiKey' => $apiKey
             ]
         ];
 
-        $response = $this->client->get(self::URL, $params);
+        try {
+            $response = $this->client->get(self::URL, $params);
+        } catch (\GuzzleHttp\Exception\GuzzleException $e) {
+            return null;
+        }
 
         $data = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 

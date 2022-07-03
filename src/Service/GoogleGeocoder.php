@@ -12,13 +12,10 @@ class GoogleGeocoder implements GeocoderInterface
 {
     private const URL = 'https://maps.googleapis.com/maps/api/geocode/json';
 
-    private string $apiKey;
-
     private ClientInterface $client;
 
-    public function __construct(string $googleGeocodingApiKey, ClientInterface $client)
+    public function __construct(ClientInterface $client)
     {
-        $this->apiKey = $googleGeocodingApiKey;
         $this->client = $client;
     }
 
@@ -29,15 +26,21 @@ class GoogleGeocoder implements GeocoderInterface
         $city = $address->getCity();
         $postcode = $address->getPostcode();
 
+        $apiKey = $_ENV["GOOGLE_GEOCODING_API_KEY"];
+
         $params = [
             'query' => [
                 'address' => $street,
                 'components' => implode('|', ["country:{$country}", "locality:{$city}", "postal_code:{$postcode}"]),
-                'key' => $this->apiKey
+                'key' => $apiKey
             ]
         ];
 
-        $response = $this->client->get(self::URL, $params);
+        try {
+            $response = $this->client->get(self::URL, $params);
+        } catch (\GuzzleHttp\Exception\GuzzleException $e) {
+            return null;
+        }
 
         $data = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 

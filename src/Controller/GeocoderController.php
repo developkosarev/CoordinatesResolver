@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Service\GeocoderService;
+use App\Service\GeocoderInterface;
+use App\Service\GeocoderServiceInterface;
 use App\ValueObject\Address;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -14,9 +15,9 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class GeocoderController extends AbstractController
 {
-    private GeocoderService $geocoderService;
+    private GeocoderServiceInterface $geocoderService;
 
-    public function __construct(GeocoderService $geocoderService)
+    public function __construct(GeocoderServiceInterface $geocoderService)
     {
         $this->geocoderService = $geocoderService;
     }
@@ -26,7 +27,7 @@ class GeocoderController extends AbstractController
      * @param Request $request
      * @return Response
      */
-    public function geocodeAction(Request $request): Response
+    public function geocodeAction(Request $request, GeocoderInterface $googleGeocoder, GeocoderInterface $HereMapsGeocoder): Response
     {
         $country = $request->get('countryCode', 'lt');
         $city = $request->get('city', 'vilnius');
@@ -37,6 +38,8 @@ class GeocoderController extends AbstractController
 
         $coordinates = $this->geocoderService
             ->setCacheEnabled(false)
+            ->addGeocoder($googleGeocoder)
+            ->addGeocoder($HereMapsGeocoder)
             ->geocode($address);
 
         if (null === $coordinates) {

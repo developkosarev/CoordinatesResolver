@@ -21,13 +21,17 @@ services:
             - '../src/Kernel.php'
             - '../src/Tests/'
 
+    guzzle_client:
+        class: GuzzleHttp\Client
+    GuzzleHttp\ClientInterface: '@guzzle_client'
+
     # Geocoders
     App\Service\GeocoderInterface: '@App\Service\DummyGeocoder'
     App\Service\GeocoderInterface $googleGeocoder: '@App\Service\GoogleGeocoder'
     App\Service\GeocoderInterface $HereMapsGeocoder: '@App\Service\HereMapsGeocoder'
-    App\Service\GeocoderInterface $FilesystemGeocoder: '@App\Service\FilesystemGeocoder'
 
-
+    App\Service\GeocoderService:
+        shared: false
 
     # controllers are imported separately to make sure services can be injected
     # as action arguments even if you don't extend any base controller class
