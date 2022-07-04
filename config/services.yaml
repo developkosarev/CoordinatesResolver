@@ -28,7 +28,7 @@ services:
     # Geocoders
     App\Service\GeocoderInterface: '@App\Service\DummyGeocoder'
     App\Service\GeocoderInterface $googleGeocoder: '@App\Service\GoogleGeocoder'
-    App\Service\GeocoderInterface $HereMapsGeocoder: '@App\Service\HereMapsGeocoder'
+    App\Service\GeocoderInterface $hereMapsGeocoder: '@App\Service\HereMapsGeocoder'
 
     App\Service\GeocoderService:
         shared: false

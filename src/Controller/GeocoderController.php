@@ -25,9 +25,11 @@ class GeocoderController extends AbstractController
     /**
      * @Route(path="/geocoder", name="geocoder_service")
      * @param Request $request
+     * @param GeocoderInterface $googleGeocoder
+     * @param GeocoderInterface $hereMapsGeocoder
      * @return Response
      */
-    public function geocodeAction(Request $request, GeocoderInterface $googleGeocoder, GeocoderInterface $HereMapsGeocoder): Response
+    public function geocodeAction(Request $request, GeocoderInterface $googleGeocoder, GeocoderInterface $hereMapsGeocoder): Response
     {
         $country = $request->get('countryCode', 'lt');
         $city = $request->get('city', 'vilnius');
@@ -39,7 +41,7 @@ class GeocoderController extends AbstractController
         $coordinates = $this->geocoderService
             ->setCacheEnabled(false)
             ->addGeocoder($googleGeocoder)
-            ->addGeocoder($HereMapsGeocoder)
+            ->addGeocoder($hereMapsGeocoder)
             ->geocode($address);
 
         if (null === $coordinates) {
